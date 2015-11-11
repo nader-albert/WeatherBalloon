@@ -8,7 +8,7 @@ workers state, produce misleading results in the output file.
 * The two Apps ProducerApp and ConsumerApp should have been seperated in two different Jars, so that we can build them separately
 
 #Assumptions / Simplifications:
-* Calculating the Min, Max temperatures ignored the different units corresponding to different observatories.
+* The calculation of the Min, Max temperatures ignored the different units corresponding to different observatories.
 * Dates / Locations were left static 
 
 #Run
