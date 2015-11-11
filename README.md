@@ -6,6 +6,7 @@ workers state, produce misleading results in the output file.
 * Unit Test Cases should be written. Scala Test to test the Logic and Akak Test Probe to test the correctness of the mesaging flow.
 * Congigurations should be made available from Command Line
 * The two Apps ProducerApp and ConsumerApp should have been seperated in two different Jars, so that we can build them separately
+* Code is not well documentated and not production ready in general
 
 #Assumptions / Simplifications:
 * The calculation of the Min, Max temperatures ignored the different units corresponding to different observatories.
