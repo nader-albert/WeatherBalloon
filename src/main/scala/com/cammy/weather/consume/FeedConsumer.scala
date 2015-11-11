@@ -2,6 +2,7 @@ package com.cammy.weather.consume
 
 import akka.actor._
 import com.cammy.weather.process.{ProcessBatch, BatchProcessor, Ready}
+import com.cammy.weather.publish.ResultPublisher
 import com.typesafe.config.Config
 
 import scala.io.{BufferedSource, Source}
@@ -61,7 +62,7 @@ class FeedConsumer(consumerAppConfig: Config) extends Actor with ActorLogging {
   }
 
   def consuming(source: BufferedSource, chunk: Int): Receive = {
-    case Ready => println
+    case Ready =>
       nextBatch.fold(sender ! PoisonPill)(sender ! ProcessBatch(_)) //kill the workers in turn, in case no more work to do
     case StopConsumeFeed =>
       log error "Feed Consumer is not connected to any source ! "
@@ -72,11 +73,11 @@ class FeedConsumer(consumerAppConfig: Config) extends Actor with ActorLogging {
   private def initialize(src: BufferedSource) {
     feedLines = Some(src getLines)
 
-    for (workerIndex <- 1 to workerPoolSize) {
-      processorPool = processorPool.::(context.actorOf(Props[BatchProcessor], "batch-processor" + Random.nextInt))
-    }
+    val resultPublisherActor = context.actorOf(Props[ResultPublisher], "result-publisher")
 
-    //processorPool.head ! ProcessBatch(Nil)
+    for (workerIndex <- 1 to workerPoolSize) {
+      processorPool = processorPool.::(context.actorOf(BatchProcessor.props(resultPublisherActor), "batch-processor" + Random.nextInt))
+    }
   }
 
   private def nextBatch: Option[List[String]] = {

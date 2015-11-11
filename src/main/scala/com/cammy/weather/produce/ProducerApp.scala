@@ -33,16 +33,9 @@ object ProducerApp extends App {
 
       import com.cammy.weather.produce.FeedSimulator._
 
-      for (i <- 1 to 1000) {
-        src.write(i + " --- " + nextLog + "\r")
+      for (i <- 1 to 10000) {
+        src.write(nextLog + "\r")
       }
-      src.close()
-
-      val today = Calendar.getInstance().getTime
-      println(today)
-
-      Random.nextInt()
+      src close
   }
-
-  val today = Calendar.getInstance().getTime
 }
