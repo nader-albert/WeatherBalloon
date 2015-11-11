@@ -5,13 +5,14 @@
 workers state, produce misleading results in the output file.
 * Unit Test Cases should be written. Scala Test to test the Logic and Akak Test Probe to test the correctness of the mesaging flow.
 * Congigurations should be made available from Command Line
+* The two Apps ProducerApp and ConsumerApp should have been seperated in two different Jars, so that we can build them separately
 
 #Assumptions / Simplifications:
 * Calculating the Min, Max temperatures ignored the different units corresponding to different observatories.
 * Dates / Locations were left static 
 
-#To run the code
+#Run
 * The system works with two different Apps (ProducerApp and ConsumerApp)
 * The ProducerApp starts first to generate the sample test data. It generates 500 Million record in around 8 minutes and writes them to a file 
 whose size reaches 19 GB.
-* The build is done sbt, and the sbt-plugin is added to the list of plugins.
+* The build is done in sbt, and the sbt-plugin is added to the list of plugins. So running the assembly task, would have generated two separate fat jars, if the both apps were under two different modules under the Weather_Balloon Project. Alternatively, the only way it can run is by the running the two Main functions explcitly. 
