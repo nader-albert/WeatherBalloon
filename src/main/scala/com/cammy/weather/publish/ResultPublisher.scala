@@ -46,12 +46,11 @@ class ResultPublisher extends Actor with ActorLogging {
       " ************ ]"
     )*/
 
-      for (i <- 1 to 10000) {
-        fileWriter.write(
-            "Maximum Temperature: " + publish.maxTemp +
-            "Minimum Temperature: " + publish.minTemp +
-            "Mean Temperature: " + publish.meanTemp
-        )
-      }
+      fileWriter.write(
+          "Maximum Temperature: " + "[" + publish.maxTemp + "]" + " " +
+          "Minimum Temperature: " + "[" + publish.minTemp + "]" + " " +
+          "Mean Temperature: " + publish.meanTemp + "\r"
+      )
+
     }
 }

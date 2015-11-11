@@ -19,11 +19,11 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
   //the actor state.
 
   //monitors the minTemp across all batches
-  var minTemp = 0
+  var minTemp = -1
   //monitors the maxTemp across all batches
-  var maxTemp = 0
+  var maxTemp = -1
   //monitors the meanTemp across all batches
-  var meanTemp = 0
+  var meanTemp = -1
 
   val temperatureOrder: Ordering[Int] = Ordering.Int
 
@@ -61,10 +61,10 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
 
     val minMaxTemperatures = processTemperature(temperatureList.sortWith(_<_))
 
-    if (temperatureOrder.gt(minTemp,minMaxTemperatures._1) && minTemp > 0 && minMaxTemperatures._1 > 0)
+    if ( (temperatureOrder.gt(minTemp,minMaxTemperatures._1) && minMaxTemperatures._1 > 0) || minTemp == -1)
       minTemp = minMaxTemperatures._1
 
-    if (temperatureOrder.lt(maxTemp,minMaxTemperatures._2) && maxTemp > 0 && minMaxTemperatures._2 > 0)
+    if ( (temperatureOrder.lt(maxTemp,minMaxTemperatures._2) && maxTemp > 0 && minMaxTemperatures._2 > 0) || maxTemp == -1)
       maxTemp = minMaxTemperatures._2
   }
 
