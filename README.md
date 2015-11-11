@@ -15,4 +15,5 @@ workers state, produce misleading results in the output file.
 * The system works with two different Apps (ProducerApp and ConsumerApp)
 * The ProducerApp starts first to generate the sample test data. It generates 500 Million record in around 8 minutes and writes them to a file 
 whose size reaches 19 GB.
-* The build is done in sbt, and the sbt-plugin is added to the list of plugins. So running the assembly task, would have generated two separate fat jars, if the both apps were under two different modules under the Weather_Balloon Project. Alternatively, the only way it can run is by the running the two Main functions explcitly. 
+* The build is done in sbt, and the sbt-plugin is added to the list of plugins. So running the assembly task, would have generated two separate fat jars, if the both apps were under two different modules under the Weather_Balloon Project. Alternatively, the only way it can run is by the running the two Main functions explcitly.
+* ProducerApp generates the file under the project directory, while the ConsumerApp reads from under resources. It has to be copied manualy then, (from under the project directory to the resources directory) before the ConsumerApp can run.
