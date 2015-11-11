@@ -27,13 +27,9 @@ object ProducerApp extends App {
     case Success(src) =>
       print("file loaded successfully !")
 
-      /*for (i <- 1 to 500000000) {
-        src.write(i + "2014-12-31T13:44|10,5|243|AU" + "\r")
-      }*/
-
       import com.cammy.weather.produce.FeedSimulator._
 
-      for (i <- 1 to 10000) {
+      for (i <- 1 to 500000000) {
         src.write(nextLog + "\r")
       }
       src close
