@@ -1,0 +1,48 @@
+package com.cammy.weather.produce
+
+import java.io.{FileNotFoundException, PrintWriter}
+import java.util.Calendar
+
+import com.typesafe.config.{Config, ConfigFactory}
+
+import scala.util.{Random, Success, Failure, Try}
+
+/**
+ * @author nader albert
+ * @since  11/11/2015.
+ */
+object ProducerApp extends App {
+
+  val config = ConfigFactory load
+
+  val applicationConfig: Config = config getConfig "weather_balloon" getConfig "producer_app"
+
+  //TODO: don't take it for granted that the configurations already exist.
+  val defaultOutputFile = applicationConfig getConfig "sources" getConfig "files" getConfig "balloon-feed" getString "path"
+
+  val file = args.toSeq.find(_ startsWith "-f=" ).fold(defaultOutputFile)(file => file.substring(file.indexOf("=") + 1))
+
+  Try { new PrintWriter(file) } match {
+    case Failure(ex:FileNotFoundException) => println ("file not found")
+    case Success(src) =>
+      print("file loaded successfully !")
+
+      /*for (i <- 1 to 500000000) {
+        src.write(i + "2014-12-31T13:44|10,5|243|AU" + "\r")
+      }*/
+
+      import com.cammy.weather.produce.FeedSimulator._
+
+      for (i <- 1 to 1000) {
+        src.write(i + " --- " + nextLog + "\r")
+      }
+      src.close()
+
+      val today = Calendar.getInstance().getTime
+      println(today)
+
+      Random.nextInt()
+  }
+
+  val today = Calendar.getInstance().getTime
+}
