@@ -35,3 +35,8 @@ object ProducerApp extends App {
       src close
   }
 }
+
+
+object Area {
+
+}
