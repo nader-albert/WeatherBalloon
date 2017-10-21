@@ -1,11 +1,7 @@
-package com.cammy.weather.produce
+package na.weatherballoon.produce
 
 import org.scalatest.FlatSpec
 
-/**
- * @author nader albert
- * @since  11/11/2015.
- */
 class BalloonFeedGeneratorTest extends FlatSpec{
 
   "An empty Set" should "have size 1" in {

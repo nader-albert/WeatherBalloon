@@ -1,12 +1,8 @@
-package com.cammy.weather.consume
+package na.weatherballoon.consume
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorSystem, PoisonPill}
 import com.typesafe.config.{Config, ConfigFactory}
 
-/**
- * @author nader albert
- * @since   11/11/2015.
- */
 object ConsumerApp extends App {
 
   val system = ActorSystem("WeatherBalloonSystem")
@@ -21,7 +17,7 @@ object ConsumerApp extends App {
 
   consumer ! StartConsumeFeed(balloonDump)
 
-  Thread.sleep(550000)
+  Thread.sleep(5500)
 
-  consumer ! StopConsumeFeed
+  consumer ! PoisonPill
 }
