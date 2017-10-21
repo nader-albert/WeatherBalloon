@@ -1,4 +1,4 @@
-package na.weatherballoon.publish
+package na.weatherballoon.analysis.aggregator
 
 import java.io.{FileNotFoundException, PrintWriter}
 

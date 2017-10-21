@@ -1,16 +1,14 @@
-package na.weatherballoon.produce
+package na.weatherballoon.simulation
 
 import java.io.{FileNotFoundException, PrintWriter}
-import java.util.Calendar
-
 import com.typesafe.config.{Config, ConfigFactory}
 
-import scala.util.{Random, Success, Failure, Try}
+import scala.util.{Success, Failure, Try}
 import languageFeature.postfixOps
 
 object ProducerApp extends App {
 
-    val config = ConfigFactory load
+    val config = ConfigFactory.load()
 
     val applicationConfig: Config = config getConfig "weather_balloon" getConfig "producer_app"
 
@@ -25,13 +23,13 @@ object ProducerApp extends App {
         case Failure(ex:FileNotFoundException) => println ("file not found")
         case Success(src) => print("file loaded successfully !")
 
-        import na.weatherballoon.produce.FeedSimulator._
+        import na.weatherballoon.simulation.FeedSimulator._
 
         for (i <- 1 to 1000) {
             src.write(nextRecord + "\r")
         }
 
-        src close
+        src close()
     }
 }
 

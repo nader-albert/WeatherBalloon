@@ -1,9 +1,9 @@
-package na.weatherballoon.process
+package na.weatherballoon.analysis.processor
 
 import java.time.LocalDateTime
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import na.weatherballoon.publish.PublishResult
+import na.weatherballoon.analysis.aggregator.PublishResult
 
 import scala.util.{Failure, Success, Try}
 
@@ -41,7 +41,7 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
   }
 
   private def process(records: List[String]) {
-      var timestamps :List[String]     = Nil
+      var timestamps :List[String]   = Nil
       var locations :List[Int]       = Nil
       var observatories :List[Int]   = Nil
       var logLineItems :List[String] = Nil

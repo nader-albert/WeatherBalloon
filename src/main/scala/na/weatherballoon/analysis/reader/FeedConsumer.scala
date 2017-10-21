@@ -1,9 +1,9 @@
-package na.weatherballoon.consume
+package na.weatherballoon.analysis.reader
 
 import akka.actor._
 import com.typesafe.config.Config
-import na.weatherballoon.process.{Batch, BatchProcessor, Ready}
-import na.weatherballoon.publish.ResultPublisher
+import na.weatherballoon.analysis.processor.{Batch, BatchProcessor, Ready}
+import na.weatherballoon.analysis.aggregator.ResultPublisher
 
 import scala.io.{BufferedSource, Source}
 import scala.languageFeature.postfixOps
