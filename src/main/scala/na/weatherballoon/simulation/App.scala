@@ -6,7 +6,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import scala.util.{Success, Failure, Try}
 import languageFeature.postfixOps
 
-object ProducerApp extends App {
+object App extends App {
 
     val config = ConfigFactory.load()
 
@@ -31,8 +31,4 @@ object ProducerApp extends App {
 
         src close()
     }
-}
-
-object Area {
-
 }
