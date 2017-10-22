@@ -52,7 +52,7 @@ class FeedConsumer(consumerAppConfig: Config) extends Actor with ActorLogging {
                 initialize(src)
 
                 for (processor <- processorPool)
-                    yield collectNextBatch().fold(processor ! PoisonPill)(list => processor ! Batch(list))
+                    yield readNext().fold(processor ! PoisonPill)(list => processor ! Batch(list))
 
                 context become consuming(src, chunkSize)
             }
@@ -61,7 +61,7 @@ class FeedConsumer(consumerAppConfig: Config) extends Actor with ActorLogging {
     /**
       * */
     def consuming(source: BufferedSource, chunk: Int): Receive = {
-        case Ready => collectNextBatch().fold(sender ! PoisonPill)(sender ! Batch(_)) //kill the workers in turn, in case no more work to do
+        case Ready => readNext().fold(sender ! PoisonPill)(sender ! Batch(_)) //kill the workers in turn, in case no more work to do
 
         case StopConsumeFeed => log error "Feed Consumer is not connected to any source ! "
             feedLines = None
@@ -73,12 +73,12 @@ class FeedConsumer(consumerAppConfig: Config) extends Actor with ActorLogging {
 
         val resultPublisherActor = context.actorOf(Props[ResultPublisher], "result-publisher")
 
-        for (workerIndex <- 1 to workerPoolSize) {
+        for (index <- 1 to workerPoolSize) {
             processorPool = processorPool.::(context.actorOf(BatchProcessor.props(resultPublisherActor), "batch-processor" + Random.nextInt))
         }
     }
 
-    private def collectNextBatch(): Option[List[String]] = {
+    private def readNext(): Option[List[String]] = {
         var batch: List[String] = Nil
 
         var numberOfLines = 0
