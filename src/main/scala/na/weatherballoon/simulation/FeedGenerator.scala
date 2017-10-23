@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 import scala.util.Random
 
-object FeedSimulator {
+object FeedGenerator {
 
     def nextRecord: String = {
         val location = LocationGenerator.generate
@@ -17,7 +17,7 @@ trait Generator[T]{
 }
 
 object TemperatureGenerator extends Generator[Int] {
-    def generate: Int = Random.nextInt(500)
+    def generate: Int = if(Random.nextBoolean) - Random.nextInt(500) else Random.nextInt(500)
 }
 
 object LocationGenerator extends Generator[(Double, Double)] {
@@ -35,8 +35,9 @@ object ObservatoryGenerator extends Generator[String] {
             .updated(AUSTRALIA,     (Celsius, KILOMETERS))
             .updated(UNITED_STATES, (Fahrenheit, Miles))
             .updated(FRANCE,        (Kelvin, Meter))
-            .updated(FRANCE,        (Kelvin, Meter))
-
+            .updated(BOLIVIA,       (Kelvin, KILOMETERS))
+            .updated(BRAZIL,        (Kelvin, KILOMETERS))
+            .updated(ECUADOR,       (Kelvin, KILOMETERS))
 
     def generate: String = {
         observatoryCodes.keys.drop(Random.nextInt(observatoryCodes.keys.size)).head

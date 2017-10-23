@@ -3,8 +3,9 @@ package na.weatherballoon.analysis.processor
 import java.time.LocalDateTime
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import na.weatherballoon.simulation.{Observatories, TemperatureUnits, DistanceUnits}
 import na.weatherballoon.{Distance, Location, Observatory, Temperature}
+import na.weatherballoon.simulation.{Observatories, TemperatureUnits, DistanceUnits}
+
 import scala.math._
 
 case object Ready
@@ -19,17 +20,15 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
         case batch: Batch =>
             log info "batch with : " + batch.records.size + " received"
 
-            log info "initiating batch processing "
-
             val output = process(batch.records)
-
-            log info "batch processing ended "
 
             resultPublisher ! output
 
             sender ! Ready
     }
 
+    /**
+      * */
     private def process(records: List[String]): BatchResult = {
         val standardRecords = records.map(parse)
         val orderedRecords = standardRecords.sortWith((first, second) => first.time.isBefore(second.time))
@@ -40,9 +39,7 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
 
         val distanceTravelled = calculateTravelledDistance(orderedRecords.map(record => (record.coordinates, record.observatory)))
 
-        println(distanceTravelled)
-
-        BatchResult(low, high, distanceTravelled, classification)
+        BatchResult(records.length, low, high, distanceTravelled, classification)
     }
 
     /***
@@ -89,18 +86,15 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
         def measure(locations: List[Location]): Double = {
             locations match {
                 case Nil => 0.0
-                case head::Nil => 0.0
-                case head::tail =>
+                case head :: Nil => 0.0
+                case head :: tail =>
                     val currentCoordinate = tail.last
                     val previousCoordinate = tail.drop(tail.length - 2).head
 
                     sqrt(
                         pow(currentCoordinate.x - previousCoordinate.x, 2)
                             + pow(currentCoordinate.y - previousCoordinate.y, 2)
-                    ) + measure(locations.take(locations.length -1))
-
-                // if size < 2 return 0
-                // return root ( sq(x1 - x0) + sq(y1 -y0) ) + measure (list drop length _ 1)
+                    ) + measure(locations.take(locations.length - 1))
             }
         }
 
@@ -155,7 +149,7 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
 
 case class Record(time: LocalDateTime, coordinates: Location, temperature: Temperature, observatory: Observatory)
 
-case class BatchResult(minTemperature: Temperature, maxTemperature: Temperature, totalDistance: Distance, observationClassification :Map[String, Int])
+case class BatchResult(batchSize: Long, minTemperature: Temperature, maxTemperature: Temperature, totalDistance: Distance, observationClassification :Map[String, Int])
 
 object BatchProcessor{
     def props(resultPublisher: ActorRef) = Props(classOf[BatchProcessor], resultPublisher)
