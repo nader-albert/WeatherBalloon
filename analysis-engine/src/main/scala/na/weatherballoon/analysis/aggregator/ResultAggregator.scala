@@ -51,7 +51,7 @@ class ResultAggregator extends Actor with ActorLogging {
 
             meanTemp = calculateMeanTemperature
 
-        case PrintOutput =>
+        case PrintOutput(statistics) =>
             log info "printing results"
             recordResults()
     }
@@ -63,9 +63,9 @@ class ResultAggregator extends Actor with ActorLogging {
 
             "**********************************************************************************" + "\r" +
 
-            " - Maximum Temperature: "     + "[" + maxTemp      +  " " + TemperatureUnits.Kelvin            + " ]" + "\r" +
-            " - Minimum Temperature: "     + "[" + minTemp      +  " " + TemperatureUnits.Kelvin            + " ]" + "\r" +
-            " - Mean Temperature: "        + "[" + meanTemp     +  " " + TemperatureUnits.Kelvin            + " ]" + "\r" +
+            " - Maximum Temperature: "     + "[" + maxTemp      +  " " + TemperatureUnits.KELVIN            + " ]" + "\r" +
+            " - Minimum Temperature: "     + "[" + minTemp      +  " " + TemperatureUnits.KELVIN            + " ]" + "\r" +
+            " - Mean Temperature: "        + "[" + meanTemp     +  " " + TemperatureUnits.KELVIN            + " ]" + "\r" +
             " - Total Distance Travelled " + "[" + distanceTravelled +  " " + DistanceUnits.KILOMETERS  + " ]" + "\r" +
             " - Number of Observations per Observatory " + "[" + observationsPerObservatory      + " ]" + "\r" +
             " - Total Number of Record Processed "       + "[" + totalNumberOfRecords + "]" + "\r" +
