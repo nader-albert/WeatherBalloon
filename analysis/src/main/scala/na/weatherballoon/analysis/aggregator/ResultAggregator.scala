@@ -2,10 +2,11 @@ package na.weatherballoon.analysis.aggregator
 
 import java.io.{FileNotFoundException, PrintWriter}
 
-import na.weatherballoon._
 import akka.actor.{Actor, ActorLogging, Props}
+import na.weatherballoon.PrintOutput
 import na.weatherballoon.analysis.processor.BatchResult
 import na.weatherballoon.simulation.{DistanceUnits, Observatories, TemperatureUnits}
+
 import scala.util.{Failure, Success, Try}
 
 class ResultAggregator extends Actor with ActorLogging {
@@ -38,7 +39,6 @@ class ResultAggregator extends Actor with ActorLogging {
 
     override def receive: Receive = {
         case result: BatchResult =>
-            //log info "Processed Batch received:  "
             if (result.minTemperature.value < minTemp) minTemp = result.minTemperature.value
 
             if (result.maxTemperature.value > maxTemp) maxTemp = result.maxTemperature.value
@@ -60,6 +60,9 @@ class ResultAggregator extends Actor with ActorLogging {
 
     private def recordResults(): Unit = {
         fileWriter.append(
+
+            "**********************************************************************************" + "\r" +
+
             " - Maximum Temperature: "     + "[" + maxTemp      +  " " + TemperatureUnits.Kelvin            + " ]" + "\r" +
             " - Minimum Temperature: "     + "[" + minTemp      +  " " + TemperatureUnits.Kelvin            + " ]" + "\r" +
             " - Mean Temperature: "        + "[" + meanTemp     +  " " + TemperatureUnits.Kelvin            + " ]" + "\r" +
@@ -70,7 +73,7 @@ class ResultAggregator extends Actor with ActorLogging {
             "**********************************************************************************"
         )
 
-        fileWriter.close()
+        fileWriter.flush()
     }
 
     private def classifyObservatories(observatoryClassification: Map[String, Int]) = {

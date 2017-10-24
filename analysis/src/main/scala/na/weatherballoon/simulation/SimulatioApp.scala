@@ -1,12 +1,13 @@
 package na.weatherballoon.simulation
 
 import java.io.{FileNotFoundException, PrintWriter}
+
 import com.typesafe.config.{Config, ConfigFactory}
 
-import scala.util.{Success, Failure, Try}
+import scala.util.{Failure, Success, Try}
 import languageFeature.postfixOps
 
-object App extends App {
+object SimulatioApp extends App {
 
     val config = ConfigFactory.load()
 
@@ -23,12 +24,13 @@ object App extends App {
         case Failure(ex:FileNotFoundException) => println ("file not found")
         case Success(src) => print("file loaded successfully !")
 
-        import na.weatherballoon.simulation.FeedSimulator._
+        import na.weatherballoon.simulation.FeedGenerator._
 
         for (i <- 1 to 1000) {
             src.write(nextRecord + "\r")
         }
 
+        print ("finished loading the file ")
         src close()
     }
 }

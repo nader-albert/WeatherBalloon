@@ -1,4 +1,4 @@
-name := "weather-balloon"
+name := "analysis"
 
 version := "1.0"
 
@@ -16,13 +16,4 @@ libraryDependencies ++= {
     "org.scalatest" %% "scalatest" % "2.2.4" % "test",
     "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
   )
-
 }
-
-lazy val shared_models  = project.in(file("model"))
-lazy val analysis       = project.in(file("analysis")).dependsOn(shared_models)
-lazy val query_engine   = project.in(file("query-engine")).dependsOn(shared_models)
-
-lazy val weather_balloon = (project in file(".")).aggregate(analysis, query_engine, shared_models)
-
-

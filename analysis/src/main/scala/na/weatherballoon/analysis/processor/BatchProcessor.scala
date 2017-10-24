@@ -4,7 +4,8 @@ import java.time.LocalDateTime
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import na.weatherballoon.{Distance, Location, Observatory, Temperature}
-import na.weatherballoon.simulation.{Observatories, TemperatureUnits, DistanceUnits}
+import na.weatherballoon.{Distance, Observatory, Temperature}
+import na.weatherballoon.simulation.{DistanceUnits, Observatories, TemperatureUnits}
 
 import scala.math._
 
