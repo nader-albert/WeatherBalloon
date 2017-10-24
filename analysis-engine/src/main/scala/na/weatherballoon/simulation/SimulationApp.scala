@@ -7,7 +7,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import scala.util.{Failure, Success, Try}
 import languageFeature.postfixOps
 
-object SimulatioApp extends App {
+object SimulationApp extends App {
 
     val config = ConfigFactory.load()
 
@@ -26,7 +26,7 @@ object SimulatioApp extends App {
 
         import na.weatherballoon.simulation.FeedGenerator._
 
-        for (i <- 1 to 1000) {
+        for (i <- 1 to 500000000) {
             src.write(nextRecord + "\r")
         }
 
