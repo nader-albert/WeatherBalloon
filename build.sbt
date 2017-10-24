@@ -20,7 +20,7 @@ libraryDependencies ++= {
 }
 
 lazy val shared_models  = project.in(file("model"))
-lazy val analysis       = project.in(file("analysis")).dependsOn(shared_models)
+lazy val analysis       = project.in(file("analysis-engine")).dependsOn(shared_models)
 lazy val query_engine   = project.in(file("query-engine")).dependsOn(shared_models)
 
 lazy val weather_balloon = (project in file(".")).aggregate(analysis, query_engine, shared_models)

@@ -1,4 +1,4 @@
-name := "analysis"
+name := "analysis-engine"
 
 version := "1.0"
 
