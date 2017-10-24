@@ -60,7 +60,7 @@ class FeedConsumer(consumerAppConfig: Config, aggregator: ActorRef) extends Acto
     /**
       * */
     def consuming(source: BufferedSource, chunk: Int): Receive = {
-        case Ready => readNext().fold(sender ! PoisonPill)(sender ! Batch(_)) //kill the workers in turn, in case no more work to do
+        case Ready => readNext().fold(sender ! PoisonPill)(sender ! Batch(_)) //kill the workers in turn, when there is no more work to do
 
         case StopConsumeFeed => log error "Feed Consumer is not connected to any source ! "
             feedLines = None

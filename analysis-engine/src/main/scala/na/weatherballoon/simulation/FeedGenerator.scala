@@ -31,13 +31,13 @@ object ObservatoryGenerator extends Generator[String] {
 
     val observatoryCodes: Map[String, (String, String)] =
         Map.empty[String, (String, String)]
-            .withDefault(_ =>       (Kelvin, KILOMETERS))
-            .updated(AUSTRALIA,     (Celsius, KILOMETERS))
-            .updated(UNITED_STATES, (Fahrenheit, Miles))
-            .updated(FRANCE,        (Kelvin, Meter))
-            .updated(BOLIVIA,       (Kelvin, KILOMETERS))
-            .updated(BRAZIL,        (Kelvin, KILOMETERS))
-            .updated(ECUADOR,       (Kelvin, KILOMETERS))
+            .withDefault(_ =>       (KELVIN, KILOMETERS))
+            .updated(AUSTRALIA,     (CELSIUS, KILOMETERS))
+            .updated(UNITED_STATES, (FAHRENHEIT, MILES))
+            .updated(FRANCE,        (KELVIN, METER))
+            .updated(BOLIVIA,       (KELVIN, KILOMETERS))
+            .updated(BRAZIL,        (KELVIN, KILOMETERS))
+            .updated(ECUADOR,       (KELVIN, KILOMETERS))
 
     def generate: String = {
         observatoryCodes.keys.drop(Random.nextInt(observatoryCodes.keys.size)).head
@@ -60,14 +60,14 @@ object Observatories {
 }
 
 object TemperatureUnits {
-    val Kelvin     = "kv"
-    val Celsius    = "celsius"
-    val Fahrenheit = "fahrenheit"
+    val KELVIN     = "kv"
+    val CELSIUS    = "celsius"
+    val FAHRENHEIT = "fahrenheit"
 }
 
 object DistanceUnits {
     val KILOMETERS  = "km"
-    val Miles       = "miles"
-    val Meter       = "m"
+    val MILES       = "miles"
+    val METER       = "m"
 
 }

@@ -3,7 +3,7 @@ package na.weatherballoon.analysis.processor
 import java.time.LocalDateTime
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import na.weatherballoon.{Distance, Location, Observatory, Temperature}
+import na.weatherballoon.Location
 import na.weatherballoon.{Distance, Observatory, Temperature}
 import na.weatherballoon.simulation.{DistanceUnits, Observatories, TemperatureUnits}
 
@@ -73,7 +73,7 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
 
         val normalisedTemperatures = normalizeTemperatures(temperatures).sortWith(_.value > _.value)
 
-        (normalisedTemperatures.headOption.getOrElse(Temperature(-1, Kelvin)), normalisedTemperatures.lastOption.getOrElse(Temperature(-1, Kelvin)))
+        (normalisedTemperatures.headOption.getOrElse(Temperature(-1, KELVIN)), normalisedTemperatures.lastOption.getOrElse(Temperature(-1, KELVIN)))
     }
 
     /**
@@ -116,11 +116,11 @@ class BatchProcessor(resultPublisher: ActorRef) extends Actor with ActorLogging 
         temperatureRecords
             .map(record => {
                 if (record._2.code == AUSTRALIA) {
-                    Temperature(celsiusToKelvin(record._1), Kelvin)
+                    Temperature(celsiusToKelvin(record._1), KELVIN)
                 } else if (record._2.code == UNITED_STATES) {
-                    Temperature(fahrenheitToKelvin(record._1), Kelvin)
+                    Temperature(fahrenheitToKelvin(record._1), KELVIN)
                 } else {
-                    record._1.copy(unit = Kelvin)
+                    record._1.copy(unit = KELVIN)
                 }
             })
     }
