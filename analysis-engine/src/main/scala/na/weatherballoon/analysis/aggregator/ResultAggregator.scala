@@ -3,7 +3,7 @@ package na.weatherballoon.analysis.aggregator
 import java.io.{FileNotFoundException, PrintWriter}
 
 import akka.actor.{Actor, ActorLogging, Props}
-import na.weatherballoon.PrintOutput
+import na.weatherballoon.{PrintOutput, Statistics}
 import na.weatherballoon.analysis.processor.BatchResult
 import na.weatherballoon.simulation.{DistanceUnits, Observatories, TemperatureUnits}
 
@@ -53,10 +53,71 @@ class ResultAggregator extends Actor with ActorLogging {
 
         case PrintOutput(statistics) =>
             log info "printing results"
-            recordResults()
+
+            if (! statistics.exists(statistic =>
+                statistic == Statistics.MaxTemp
+                || statistic == Statistics.MeanTemp
+                || statistic == Statistics.MinTemp
+                || statistic == Statistics.TOTAL_DISTANCE
+                || statistic == Statistics.OBSERVATIONS_PER_OBSERVATORY
+                || statistic == Statistics.TOTAL_NUMBER_OF_OBSERVATIONS)) {
+                log warning "invalid command"
+            } else {
+                fileWriter.append("**********************************************************************************" + "\r")
+
+                statistics.foreach {
+                    case Statistics.MaxTemp => recordMaxTemp()
+                    case Statistics.MinTemp => recordMinTemp()
+                    case Statistics.MeanTemp => recordMeanTemp()
+                    case Statistics.TOTAL_DISTANCE => recordTotalDistance()
+                    case Statistics.OBSERVATIONS_PER_OBSERVATORY => recordNumberOfObservations()
+                    case Statistics.TOTAL_NUMBER_OF_OBSERVATIONS => recordTotalNumberOfRecords()
+                    case _ =>
+                }
+
+                fileWriter.append("**********************************************************************************" + "\r")
+
+                fileWriter.flush()
+            }
     }
 
     private def calculateMeanTemperature = (maxTemp + minTemp) / totalNumberOfRecords
+
+    private def recordMinTemp(): Unit = {
+        fileWriter.append(" - Minimum Temperature: "     + "[" + minTemp      +  " " + TemperatureUnits.KELVIN            + " ]" + "\r")
+
+        fileWriter.flush()
+    }
+
+    private def recordMaxTemp(): Unit = {
+        fileWriter.append(" - Maximum Temperature: "     + "[" + maxTemp      +  " " + TemperatureUnits.KELVIN            + " ]" + "\r")
+
+        fileWriter.flush()
+    }
+
+    private def recordMeanTemp(): Unit = {
+        fileWriter.append(" - Mean Temperature: "        + "[" + meanTemp     +  " " + TemperatureUnits.KELVIN            + " ]" + "\r")
+
+        fileWriter.flush()
+    }
+
+    private def recordTotalDistance(): Unit = {
+        fileWriter.append(" - Total Distance Travelled " + "[" + distanceTravelled +  " " + DistanceUnits.KILOMETERS  + " ]" + "\r")
+
+        fileWriter.flush()
+    }
+
+    private def recordNumberOfObservations(): Unit = {
+        fileWriter.append(" - Number of Observations per Observatory " + "[" + observationsPerObservatory      + " ]" + "\r")
+
+        fileWriter.flush()
+    }
+
+    private def recordTotalNumberOfRecords(): Unit = {
+        fileWriter.append(
+            " - Total Number of Record Processed "       + "[" + totalNumberOfRecords + "]" + "\r")
+        fileWriter.flush()
+    }
 
     private def recordResults(): Unit = {
         fileWriter.append(
